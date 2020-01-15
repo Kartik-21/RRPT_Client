@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1085612790108",
+    "firebase_url": "https://rrptoriginal.firebaseio.com",
+    "project_id": "rrptoriginal",
+    "storage_bucket": "rrptoriginal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085612790108:android:1727f801f9f6097445b199",
+        "android_client_info": {
+          "package_name": "com.jk.rrpt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085612790108-5akqh33rrg1mm2rsli6l3rcng2674f6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jk.rrpt",
+            "certificate_hash": "028f8c3d3a29318f46bb2fe0313943a477c47bfe"
+          }
+        },
+        {
+          "client_id": "1085612790108-s1cfh5jblq2cnd5a5knndkgogs9hakda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO-52JtvrB190avLdb5GdCrC3O-Gj6qg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085612790108-s1cfh5jblq2cnd5a5knndkgogs9hakda.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
