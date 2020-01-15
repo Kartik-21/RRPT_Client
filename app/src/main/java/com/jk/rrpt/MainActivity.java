@@ -15,6 +15,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +56,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        //Animation animation= AnimationUtils(getApplicationContext(),R.anim.fade_l_r);
+
+
 
         //Log.w(TAG, "fragment");
         displayFragment(R.id.nav_home);
@@ -156,6 +164,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (f != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.fade_l_r,R.anim.fade_r_l);
             ft.replace(R.id.frames_layout, f);
             ft.commit();
         }
