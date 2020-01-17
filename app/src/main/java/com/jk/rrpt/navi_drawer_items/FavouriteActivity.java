@@ -73,8 +73,7 @@ public class FavouriteActivity extends Fragment {
 
         new UserPdf().execute();
 
-
-        refresh_fav=(SwipeRefreshLayout)getActivity().findViewById(R.id.refresh_fav);
+        refresh_fav = (SwipeRefreshLayout) getActivity().findViewById(R.id.refresh_fav);
 
         refresh_fav.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -85,7 +84,7 @@ public class FavouriteActivity extends Fragment {
                     public void run() {
                         refresh_fav.setRefreshing(false);
                     }
-                },500);
+                }, 500);
             }
         });
 
@@ -157,6 +156,7 @@ public class FavouriteActivity extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+
 
             final Pdf pdf = data.get(position);
 

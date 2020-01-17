@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,7 +137,7 @@ public class NotificationActivity extends Fragment {
         public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
 
             Noti noti = list.get(position);
-            holder.show_noti.setText(noti.getNoti_name());
+            holder.show_noti.setText(Html.fromHtml(noti.getNoti_name()));
 
         }
 
