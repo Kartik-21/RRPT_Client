@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,9 +47,6 @@ public class NotificationActivity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-
 
 
         list = new ArrayList<Noti>();
@@ -108,7 +106,17 @@ public class NotificationActivity extends Fragment {
                 MyAdaptor1 adaptor = new MyAdaptor1(list);
                 rv_noti.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
+            }else {
+
+                list.clear();
+            //    list.add(null);
+                MyAdaptor1 adaptor = new MyAdaptor1(null);
+                rv_noti.setAdapter(adaptor);
+                adaptor.notifyDataSetChanged();
+
             }
+
+
             super.onPostExecute(allNoti);
         }
 
@@ -136,14 +144,24 @@ public class NotificationActivity extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
 
-            Noti noti = list.get(position);
-            holder.show_noti.setText(Html.fromHtml(noti.getNoti_name()));
+            if (list.get(position) != null) {
+                Noti noti = list.get(position);
 
+                holder.show_noti.setText(Html.fromHtml(noti.getNoti_name()));
+
+            }
         }
+
 
         @Override
         public int getItemCount() {
-            return list.size();
+
+            if (list != null && list.size() > 0) {
+             //   Toast.makeText(getContext(),list.size(),Toast.LENGTH_SHORT).show();
+                return list.size();
+            } else {
+                return 0;
+            }
         }
 
         public class BlogViewHolder extends RecyclerView.ViewHolder {

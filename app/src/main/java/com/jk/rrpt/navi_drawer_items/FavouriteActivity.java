@@ -129,6 +129,13 @@ public class FavouriteActivity extends Fragment {
                 MyAdaptor adaptor = new MyAdaptor(list);
                 rv_fav.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
+            } else {
+                list.clear();
+                // list.addAll(allPdf.getData());
+                //  adapter.notifyDataSetChanged();
+                MyAdaptor adaptor = new MyAdaptor(null);
+                rv_fav.setAdapter(adaptor);
+                adaptor.notifyDataSetChanged();
 
             }
             super.onPostExecute(allPdf);
@@ -157,94 +164,102 @@ public class FavouriteActivity extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
 
+            if (data.get(position) != null) {
 
-            final Pdf pdf = data.get(position);
+                final Pdf pdf = data.get(position);
 
-            String path = pdf.getBook_image_url().toString().trim();
+                String path = pdf.getBook_image_url().toString().trim();
 
-            final String id = pdf.getUser_book_id().toString().trim();
+                final String id = pdf.getUser_book_id().toString().trim();
 
-            if (path != "") {
-                holder.setImage(getContext(), path);
+                if (path != "") {
+                    holder.setImage(getContext(), path);
 
-            } else {
+                } else {
 
-                Toast.makeText(getActivity(), "does't load url", Toast.LENGTH_SHORT).show();
-            }
-
-            holder.show_name.setText(pdf.getBook_title());
-
-
-            holder.btn_del.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    //   Toast.makeText(getActivity(), id, Toast.LENGTH_SHORT).show();
-                    new DelBook().execute();
-                    new UserPdf().execute();
-
+                    Toast.makeText(getActivity(), "does't load url", Toast.LENGTH_SHORT).show();
                 }
 
+                holder.show_name.setText(pdf.getBook_title());
 
-                class DelBook extends AsyncTask<Void, Void, String> {
 
-                    ProgressDialog dialog;
-
+                holder.btn_del.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    protected void onPreExecute() {
-                        dialog = new ProgressDialog(getActivity());
-                        dialog.setMessage("Please Wait...!");
-                        dialog.show();
-                        super.onPreExecute();
+                    public void onClick(View v) {
+
+                        //   Toast.makeText(getActivity(), id, Toast.LENGTH_SHORT).show();
+                        new DelBook().execute();
+                        new UserPdf().execute();
+
                     }
 
 
-                    @Override
-                    protected String doInBackground(Void... voids) {
+                    class DelBook extends AsyncTask<Void, Void, String> {
 
-                        APICall call = new APICall();
-                        String result = call.DelBookUser(id);
-                        return result;
-                    }
+                        ProgressDialog dialog;
 
-                    @Override
-                    protected void onPostExecute(String s) {
-
-                        if (s != "") {
-                            Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            Toast.makeText(getActivity(), "Try again..", Toast.LENGTH_SHORT).show();
+                        @Override
+                        protected void onPreExecute() {
+                            dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Please Wait...!");
+                            dialog.show();
+                            super.onPreExecute();
                         }
-                        dialog.dismiss();
-                        super.onPostExecute(s);
+
+
+                        @Override
+                        protected String doInBackground(Void... voids) {
+
+                            APICall call = new APICall();
+                            String result = call.DelBookUser(id);
+                            return result;
+                        }
+
+                        @Override
+                        protected void onPostExecute(String s) {
+
+                            if (s != "") {
+                                Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Toast.makeText(getActivity(), "Try again..", Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.dismiss();
+                            super.onPostExecute(s);
+                        }
+
+
                     }
+                });
 
+                holder.rl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                }
-            });
+                        //   Toast.makeText(getActivity(), "You Clicked " + pdf.getBook_image_url(), Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setDataAndType(Uri.parse(APIRes.BASE_URL + pdf.getBook_pdf_url()), "application/pdf");
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            holder.rl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                        startActivity(i);
 
-                    //   Toast.makeText(getActivity(), "You Clicked " + pdf.getBook_image_url(), Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setDataAndType(Uri.parse(APIRes.BASE_URL + pdf.getBook_pdf_url()), "application/pdf");
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    }
+                });
 
-                    startActivity(i);
-
-                }
-            });
-
-
+            }
         }
 
 
         @Override
         public int getItemCount() {
-            return data.size();
+
+            if (list != null && list.size() > 0) {
+                //   Toast.makeText(getContext(),list.size(),Toast.LENGTH_SHORT).show();
+                return list.size();
+            } else {
+                return 0;
+            }
+           // return data.size();
         }
 
         public class CustomViewHolder extends RecyclerView.ViewHolder {
