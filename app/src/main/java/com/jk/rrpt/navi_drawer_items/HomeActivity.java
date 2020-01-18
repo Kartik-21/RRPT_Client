@@ -69,7 +69,7 @@ public class HomeActivity extends Fragment {
 
         new GetPdf().execute();
 
-        refresh_home=(SwipeRefreshLayout)getActivity().findViewById(R.id.refresh_home);
+        refresh_home = (SwipeRefreshLayout) getActivity().findViewById(R.id.refresh_home);
 
         refresh_home.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -81,8 +81,8 @@ public class HomeActivity extends Fragment {
                     @Override
                     public void run() {
                         refresh_home.setRefreshing(false);
-                      }
-                },500);
+                    }
+                }, 500);
             }
         });
 
@@ -119,12 +119,15 @@ public class HomeActivity extends Fragment {
             if (allPdf != null) {
                 list.clear();
                 list.addAll(allPdf.getData());
-                //  adapter.notifyDataSetChanged();
-
                 MyAdaptor adaptor = new MyAdaptor(list);
                 rv_home.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
-
+            } else {
+                list.clear();
+                //list.add(null);
+                MyAdaptor adaptor = new MyAdaptor(null);
+                rv_home.setAdapter(adaptor);
+                adaptor.notifyDataSetChanged();
             }
             super.onPostExecute(allPdf);
         }
@@ -152,90 +155,94 @@ public class HomeActivity extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
 
-            final Pdf pdf = data.get(position);
+            if (data.get(position) != null) {
+                final Pdf pdf = data.get(position);
 
-            String path = pdf.getBook_image_url().toString().trim();
-            final String id = pdf.getBook_id().toString().trim();
-
-
-            if (path != "") {
-                holder.setImage(getContext(), path);
-
-            } else {
-                Toast.makeText(getActivity(), "does't load url", Toast.LENGTH_SHORT).show();
-            }
-
-            holder.show_name.setText(pdf.getBook_title());
+                String path = pdf.getBook_image_url().toString().trim();
+                final String id = pdf.getBook_id().toString().trim();
 
 
-            holder.btn_add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AddBook().execute();
+                if (path != "") {
+                    holder.setImage(getContext(), path);
 
+                } else {
+                    Toast.makeText(getActivity(), "does't load url", Toast.LENGTH_SHORT).show();
                 }
 
-                class AddBook extends AsyncTask<Void, Void, String> {
-                    private ProgressDialog dialog;
+                holder.show_name.setText(pdf.getBook_title());
 
 
+                holder.btn_add.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    protected void onPreExecute() {
+                    public void onClick(View v) {
+                        new AddBook().execute();
+
+                    }
+
+                    class AddBook extends AsyncTask<Void, Void, String> {
+                        private ProgressDialog dialog;
+
+
+                        @Override
+                        protected void onPreExecute() {
 
 //                        Toast.makeText(getActivity(), "clicked.." + id +" "+email, Toast.LENGTH_SHORT).show();
 
-                        dialog = new ProgressDialog(getActivity());
-                        dialog.setMessage("Please Wait...!");
-                        dialog.show();
-                        super.onPreExecute();
-                    }
-
-
-                    @Override
-                    protected String doInBackground(Void... voids) {
-
-                        APICall api = new APICall();
-                        String result = api.AddBookUser(email, id);
-                        return result;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String result) {
-
-                        if (result != null) {
-                            Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Please try again..!", Toast.LENGTH_SHORT).show();
+                            dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Please Wait...!");
+                            dialog.show();
+                            super.onPreExecute();
                         }
-                        dialog.dismiss();
 
-                        super.onPostExecute(result);
+
+                        @Override
+                        protected String doInBackground(Void... voids) {
+
+                            APICall api = new APICall();
+                            String result = api.AddBookUser(email, id);
+                            return result;
+                        }
+
+                        @Override
+                        protected void onPostExecute(String result) {
+
+                            if (result != null) {
+                                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Please try again..!", Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.dismiss();
+
+                            super.onPostExecute(result);
+                        }
                     }
+                });
 
+                holder.rl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                }
+                        // Toast.makeText(getActivity(), "You Clicked " + APIRes.BASE_URL + pdf.getBook_pdf_url(), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setDataAndType(Uri.parse(APIRes.BASE_URL + pdf.getBook_pdf_url()), "application/pdf");
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
 
-
-            });
-
-            holder.rl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    // Toast.makeText(getActivity(), "You Clicked " + APIRes.BASE_URL + pdf.getBook_pdf_url(), Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setDataAndType(Uri.parse(APIRes.BASE_URL + pdf.getBook_pdf_url()), "application/pdf");
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-
-                }
-            });
+                    }
+                });
+            }
         }
 
 
         @Override
-        public int getItemCount() {
-            return data.size();
+        public int getItemCount()
+        {
+            if (list != null && list.size() > 0) {
+                 return list.size();
+            } else {
+                return 0;
+            }
+          //  return data.size();
         }
 
         public class CustomViewHolder extends RecyclerView.ViewHolder {

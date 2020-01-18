@@ -206,7 +206,6 @@ public class FavouriteActivity extends Fragment {
                             super.onPreExecute();
                         }
 
-
                         @Override
                         protected String doInBackground(Void... voids) {
 
