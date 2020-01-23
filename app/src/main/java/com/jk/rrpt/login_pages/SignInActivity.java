@@ -194,9 +194,11 @@ public class SignInActivity extends AppCompatActivity {
 
             if (s != null) {
            //     Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+
                 Log.d("result", s);
             } else {
                 Toast.makeText(getApplicationContext(),"try again..",Toast.LENGTH_SHORT).show();
+               // finish();
                 Log.d("result", "try again");
             }
             dialog.dismiss();

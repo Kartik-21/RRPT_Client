@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     private TextView user_name;
     private TextView user_email;
 
+    private ActionBarDrawerToggle toggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +57,20 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
+        //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_l_r);
+        //drawerLayout.setAnimation(animation);
 
         navigationView.setNavigationItemSelectedListener(this);
 
-
         //Animation animation= AnimationUtils(getApplicationContext(),R.anim.fade_l_r);
 
-
-
         //Log.w(TAG, "fragment");
-        displayFragment(R.id.nav_home);
 
+        displayFragment(R.id.nav_home);
 
         user_email = (TextView) findViewById(R.id.user_email);
         user_name = (TextView) findViewById(R.id.user_name);
-
 
         firebaseAuth = FirebaseAuth.getInstance();
         //this is where we start the Auth state Listener to listen for whether the user is signed in or not
@@ -85,7 +87,6 @@ public class MainActivity extends AppCompatActivity
                     startActivity(i);
                     // Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
+
 
             //TODO(): Add more cases on requirements
         }
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (f != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.fade_l_r,R.anim.fade_r_l);
+            //   ft.setCustomAnimations(R.anim.fade_l_r,R.anim.fade_r_l);
             ft.replace(R.id.frames_layout, f);
             ft.commit();
         }

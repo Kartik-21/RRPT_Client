@@ -32,6 +32,8 @@ public class NotificationActivity extends Fragment {
 
     private static final String TAG = "notification";
 
+    MyAdaptor1 adaptor;
+
     private RecyclerView rv_noti;
     private ArrayList<Noti> list;
     private SwipeRefreshLayout refresh_noti;
@@ -103,20 +105,18 @@ public class NotificationActivity extends Fragment {
             if (allNoti != null) {
                 list.clear();
                 list.addAll(allNoti.getData());
-                MyAdaptor1 adaptor = new MyAdaptor1(list);
+                 adaptor = new MyAdaptor1(list);
                 rv_noti.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
             }else {
 
                 list.clear();
             //    list.add(null);
-                MyAdaptor1 adaptor = new MyAdaptor1(null);
+                 adaptor = new MyAdaptor1(null);
                 rv_noti.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
 
             }
-
-
             super.onPostExecute(allNoti);
         }
 

@@ -10,11 +10,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +49,8 @@ public class HomeActivity extends Fragment {
     private RecyclerView rv_home;
 
     SharedPreferences preferences;
+
+    MyAdaptor adaptor;
 
     private String email;
     private SwipeRefreshLayout refresh_home;
@@ -89,6 +98,28 @@ public class HomeActivity extends Fragment {
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.main2, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptor.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
 
     public class GetPdf extends AsyncTask<Void, Void, AllPdf> {
 
@@ -119,13 +150,13 @@ public class HomeActivity extends Fragment {
             if (allPdf != null) {
                 list.clear();
                 list.addAll(allPdf.getData());
-                MyAdaptor adaptor = new MyAdaptor(list);
+                adaptor = new MyAdaptor(list);
                 rv_home.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
             } else {
                 list.clear();
                 //list.add(null);
-                MyAdaptor adaptor = new MyAdaptor(null);
+                adaptor = new MyAdaptor(null);
                 rv_home.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
             }
@@ -135,12 +166,15 @@ public class HomeActivity extends Fragment {
     }
 
 
-    public class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.CustomViewHolder> {
+    public class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.CustomViewHolder> implements Filterable {
 
         private ArrayList<Pdf> data;
+        private ArrayList<Pdf> dataf;
+
 
         public MyAdaptor(ArrayList<Pdf> data) {
             this.data = data;
+            dataf = new ArrayList<>(data);
         }
 
         @NonNull
@@ -235,15 +269,51 @@ public class HomeActivity extends Fragment {
 
 
         @Override
-        public int getItemCount()
-        {
+        public int getItemCount() {
             if (list != null && list.size() > 0) {
-                 return list.size();
+                return list.size();
             } else {
                 return 0;
             }
-          //  return data.size();
+            //  return data.size();
         }
+
+        @Override
+        public Filter getFilter() {
+            return exfilter;
+        }
+
+        private Filter exfilter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                ArrayList<Pdf> filterlist = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+
+                    filterlist.addAll(dataf);
+                } else {
+                    String filterpattern = constraint.toString().toLowerCase().trim();
+
+                    for (Pdf item : dataf) {
+
+                        if (item.getBook_title().toString().contains(filterpattern)) {
+                            filterlist.add(item);
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filterlist;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                data.clear();
+                data.addAll((ArrayList) results.values);
+                notifyDataSetChanged();
+            }
+        };
 
         public class CustomViewHolder extends RecyclerView.ViewHolder {
 
@@ -271,6 +341,7 @@ public class HomeActivity extends Fragment {
 
         }
     }
+
 
 }
 

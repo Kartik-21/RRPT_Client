@@ -2,7 +2,9 @@ package com.jk.rrpt.API;
 
 public class APIRes {
 
-    public static final String BASE_URL = "http://192.168.43.24/rrpt/android/";
+
+    public static final String BASE_URL = "http://192.168.0.104/rrpt/android/";
+    //public static final String BASE_URL = "http://192.168.43.24/rrpt/android/";
 
     public static final  String GET_PDF=BASE_URL+"getpdf.php";
 
