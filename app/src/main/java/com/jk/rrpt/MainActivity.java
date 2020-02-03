@@ -1,6 +1,8 @@
 package com.jk.rrpt;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,7 +43,10 @@ public class MainActivity extends AppCompatActivity
     private TextView user_name;
     private TextView user_email;
 
+   private String email;
+
     private ActionBarDrawerToggle toggle;
+    SharedPreferences preferences;
 
 
     @Override
@@ -57,7 +62,6 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
-        //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_l_r);
         //drawerLayout.setAnimation(animation);
 
@@ -69,8 +73,13 @@ public class MainActivity extends AppCompatActivity
 
         displayFragment(R.id.nav_home);
 
-        user_email = (TextView) findViewById(R.id.user_email);
-        user_name = (TextView) findViewById(R.id.user_name);
+          user_email = (TextView) findViewById(R.id.useremail);
+         user_name = (TextView) findViewById(R.id.username);
+
+        preferences = getApplicationContext().getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        email = preferences.getString("email", "not found");
+       // Toast.makeText(getApplicationContext(),email,Toast.LENGTH_SHORT).show();
+        //user_email.setText(email.toString());
 
         firebaseAuth = FirebaseAuth.getInstance();
         //this is where we start the Auth state Listener to listen for whether the user is signed in or not
@@ -191,7 +200,6 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
-
 
 
 }

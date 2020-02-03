@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +38,12 @@ public class NotificationActivity extends Fragment {
     private RecyclerView rv_noti;
     private ArrayList<Noti> list;
     private SwipeRefreshLayout refresh_noti;
+    private ScrollView scrol_noti;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.activity_notification, container, false);
     }
 
@@ -50,11 +51,14 @@ public class NotificationActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         list = new ArrayList<Noti>();
         rv_noti = getActivity().findViewById(R.id.rv_noti);
         rv_noti.setHasFixedSize(true);
         rv_noti.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+       // scrol_noti=(ScrollView)getActivity().findViewById(R.id.scroll_noti);
+        //scrol_noti.fullScroll(View.FOCUS_DOWN);
+
 
         new GetNoti().execute();
 
