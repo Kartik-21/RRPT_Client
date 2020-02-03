@@ -106,7 +106,7 @@ session_start();
 							<td>".$rows['noti_id']."</td>
 							<td>".$rows['noti_name']."</td>
 							<td>".$rows['date']."</td>
-							<td><a href='addnotiphp.php?n_id=".$rows['noti_id']."' class='btn btn-info btn-xs'>Edit</a></td>
+							<td><a href='#' class='btn btn-info btn-xs'>Edit</a></td>
 							<td><a href='notidetailsphp.php?n_id=".$rows['noti_id']."' class='btn btn-danger btn-xs'>Delete</a></td>
 						</tr>";
 					}

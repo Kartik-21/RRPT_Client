@@ -1,4 +1,6 @@
 
+
+
 <!-- session -->
 <?php
 session_start();
@@ -28,6 +30,37 @@ session_start();
 
 ?>
 
+
+<!--editing form-->
+
+<?php
+
+ require_once 'config.php';
+   $con = mysqli_connect("$host","$username","$password");
+   mysqli_select_db($con,"$dbname");
+   
+   if(isset($_GET['n_id'])){
+	   
+		   $nid=$_GET['n_id'];
+		   $q="select * from notification where noti_id='$nid'";
+		  
+		   $i=mysqli_query($con,$q);
+		   
+		   while($row=mysqli_fetch_assoc($i)){
+			   
+			   $name=$row['noti_name'];
+			 }
+		   
+   }else{
+	   
+	   $name='';
+	   
+   } 
+	
+
+?>
+
+
 <!-- add nofitication to server -->
 
 <?php 
@@ -41,9 +74,22 @@ session_start();
 		//mysqli_set_charset($con,'utf8');
      	if(isset($_POST['submit_noti'])){   
       
-     			$id=$_SESSION['id'];
-        		$post = $_POST['post'];
-			
+			$id=$_SESSION['id'];
+			$post = $_POST['post'];
+			//$nid=$_GET['n_id'];
+				
+		
+			if(isset($_POST['nid'])){
+				 $nid=$_POST['nid'];
+				//$q1="update notification set noti_name='$post' where noti_id='$nid'";
+				                
+				if( mysqli_query($con,$q1)>0){      		
+					$del='<div class="alert alert-success">Update sucessfully...</div>';
+				   }else{
+					$del='<div class="alert alert-danger">Try again...!</div>';
+				   }
+			}
+			else{
         	   	$q = "INSERT INTO notification (noti_name,a_id) values('$post','$id')";
                                 
                     if( mysqli_query($con,$q)>0){      		
@@ -53,7 +99,7 @@ session_start();
                   		$del='<div class="alert alert-danger">Try again...!</div>';
                 	   }
            }
-    	   mysqli_close($con);
+		}mysqli_close($con);
              
 ?>
 
@@ -96,7 +142,7 @@ session_start();
 
 			<div class="col-sm-10">
 
-			<textarea name="post" style="height: 150px; width: 500px;"></textarea>
+			<textarea name="post" style="height: 150px; width: 500px;"><?php echo $name;?></textarea>
 			</div>
 		</div>
 		

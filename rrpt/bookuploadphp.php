@@ -38,9 +38,10 @@ function compressImage($source, $destination, $quality) {
 
   $info = getimagesize($source);
 
-  if ($info['mime'] == 'image/jpeg') 
+  if ($info['mime'] == 'image/jpeg') {
+	  ini_set('memory_limit', '400M');
     $image = imagecreatefromjpeg($source);
-
+  }
   elseif ($info['mime'] == 'image/gif') 
     $image = imagecreatefromgif($source);
 
@@ -98,15 +99,17 @@ function compressImage($source, $destination, $quality) {
                 $pdfMoveUrl='android/pdfs/';        //in this we have to set location to move the file
                 $imgMoveUrl='android/images/';  
 
+				$uniq=uniqid();
+				
                 $PdfInfo = pathinfo($_FILES['pdf']['name']);
                 $PdfFileExtension = $PdfInfo['extension']; 
-                $PdfFileURL = $pdfURL . $Name . '.' . $PdfFileExtension;     //it store in database 
-                $PdfMoveFileUrl=$pdfMoveUrl. $Name . '.' . $PdfFileExtension;    //it store the actual file
+                $PdfFileURL = $pdfURL . $uniq . '.' . $PdfFileExtension;     //it store in database 
+                $PdfMoveFileUrl=$pdfMoveUrl. $uniq . '.' . $PdfFileExtension;    //it store the actual file
 
                 $ImageInfo=pathinfo($_FILES['img']['name']);
                 $ImageFileExtension=$ImageInfo['extension'];    //finding a extension
-                $ImageFileUrl=$imgURL.$Name.'.'.$ImageFileExtension;        //it store in database 
-                $ImageMoveFileUrl=$imgMoveUrl.$Name.'.'.$ImageFileExtension;    //it store the actual file
+                $ImageFileUrl=$imgURL.$uniq.'.'.$ImageFileExtension;        //it store in database 
+                $ImageMoveFileUrl=$imgMoveUrl.$uniq.'.'.$ImageFileExtension;    //it store the actual file
 
                
         if($_SERVER['REQUEST_METHOD']=='POST'){

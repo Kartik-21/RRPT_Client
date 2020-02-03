@@ -28,6 +28,8 @@ session_start();
 
 ?>
 
+
+
 <!-- delete book from server -->
 <?php
 
@@ -112,7 +114,7 @@ session_start();
 							<td>".$rows['book_year']."</td>
 							<td>".$rows['book_author']."</td>
 							<td>".$rows['date']."</td>
-							<td><a href='addbookphp.php?b_id=".$rows['book_id']."' class='btn btn-info btn-xs'>Edit</a></td>
+							<td><a href='#' class='btn btn-info btn-xs'>Edit</a></td>
 							<td><a href='bookdetailsphp.php?b_id=".$rows['book_id']."' class='btn btn-danger btn-xs'>Delete</a></td>
 						</tr>";
 					}
