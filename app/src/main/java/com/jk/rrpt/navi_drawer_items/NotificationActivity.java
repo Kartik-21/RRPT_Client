@@ -6,12 +6,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +32,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.jk.rrpt.API.APICall;
 import com.jk.rrpt.MODEL.AllNoti;
 import com.jk.rrpt.MODEL.Noti;
+import com.jk.rrpt.MODEL.Pdf;
 import com.jk.rrpt.R;
 
 import java.util.ArrayList;
@@ -40,6 +48,9 @@ public class NotificationActivity extends Fragment {
     private SwipeRefreshLayout refresh_noti;
     private ScrollView scrol_noti;
 
+    public NotificationActivity() {
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -50,19 +61,20 @@ public class NotificationActivity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
 
         list = new ArrayList<Noti>();
         rv_noti = getActivity().findViewById(R.id.rv_noti);
         rv_noti.setHasFixedSize(true);
         rv_noti.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-       // scrol_noti=(ScrollView)getActivity().findViewById(R.id.scroll_noti);
+        // scrol_noti=(ScrollView)getActivity().findViewById(R.id.scroll_noti);
         //scrol_noti.fullScroll(View.FOCUS_DOWN);
 
 
         new GetNoti().execute();
 
-        refresh_noti = (SwipeRefreshLayout) getActivity().findViewById(R.id.refresh_nofi);
+        refresh_noti = getActivity().findViewById(R.id.refresh_nofi);
 
         refresh_noti.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -79,6 +91,30 @@ public class NotificationActivity extends Fragment {
         });
 
 
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.main2, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                adaptor.getFilter().filter(newText);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public class GetNoti extends AsyncTask<Void, Void, AllNoti> {
@@ -109,14 +145,14 @@ public class NotificationActivity extends Fragment {
             if (allNoti != null) {
                 list.clear();
                 list.addAll(allNoti.getData());
-                 adaptor = new MyAdaptor1(list);
+                adaptor = new MyAdaptor1(list);
                 rv_noti.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
-            }else {
+            } else {
 
                 list.clear();
-            //    list.add(null);
-                 adaptor = new MyAdaptor1(null);
+                //    list.add(null);
+                adaptor = new MyAdaptor1(null);
                 rv_noti.setAdapter(adaptor);
                 adaptor.notifyDataSetChanged();
 
@@ -127,13 +163,41 @@ public class NotificationActivity extends Fragment {
     }
 
 
-    public class MyAdaptor1 extends RecyclerView.Adapter<MyAdaptor1.BlogViewHolder> {
-
-        public MyAdaptor1(ArrayList<Noti> list) {
-            this.list = list;
-        }
+    public class MyAdaptor1 extends RecyclerView.Adapter<MyAdaptor1.BlogViewHolder> implements Filterable {
 
         ArrayList<Noti> list;
+        private ArrayList<Noti> dataf;
+        private Filter exfilter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                ArrayList<Noti> filterlist = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+
+                    filterlist.addAll(dataf);
+                } else {
+                    String filterpattern = constraint.toString().toLowerCase().trim();
+
+                    for (Noti item : dataf) {
+
+                        if (item.getNoti_name().contains(filterpattern)) {
+                            filterlist.add(item);
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filterlist;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                list.clear();
+                list.addAll((ArrayList) results.values);
+                notifyDataSetChanged();
+            }
+        };
 
         @NonNull
         @Override
@@ -144,6 +208,12 @@ public class NotificationActivity extends Fragment {
             return new BlogViewHolder(view);
 
         }
+
+        public MyAdaptor1(ArrayList<Noti> list) {
+            this.list = list;
+            dataf = new ArrayList<>(list);
+        }
+
 
         @Override
         public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
@@ -156,17 +226,22 @@ public class NotificationActivity extends Fragment {
             }
         }
 
-
         @Override
         public int getItemCount() {
 
             if (list != null && list.size() > 0) {
-             //   Toast.makeText(getContext(),list.size(),Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getContext(),list.size(),Toast.LENGTH_SHORT).show();
                 return list.size();
             } else {
                 return 0;
             }
         }
+
+        @Override
+        public Filter getFilter() {
+            return exfilter;
+        }
+
 
         public class BlogViewHolder extends RecyclerView.ViewHolder {
 

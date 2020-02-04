@@ -41,6 +41,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unchecked")
 public class HomeActivity extends Fragment {
 
     private static final String TAG = "homeactivity";
@@ -55,9 +56,8 @@ public class HomeActivity extends Fragment {
     private String email;
     private SwipeRefreshLayout refresh_home;
 
-public HomeActivity(){
-
-    setHasOptionsMenu(true);
+    public HomeActivity() {
+        setHasOptionsMenu(true);
     }
 
 
@@ -72,6 +72,7 @@ public HomeActivity(){
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+
         preferences = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
 
         email = preferences.getString("email", "not found");
@@ -107,13 +108,9 @@ public HomeActivity(){
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
 
-
-
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -260,7 +257,6 @@ public HomeActivity(){
                 }
 
                 holder.show_name.setText(pdf.getBook_title());
-
 
                 holder.btn_add.setOnClickListener(new View.OnClickListener() {
                     @Override
