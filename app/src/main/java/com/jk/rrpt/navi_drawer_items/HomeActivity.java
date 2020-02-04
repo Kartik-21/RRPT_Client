@@ -55,6 +55,11 @@ public class HomeActivity extends Fragment {
     private String email;
     private SwipeRefreshLayout refresh_home;
 
+public HomeActivity(){
+
+    setHasOptionsMenu(true);
+    }
+
 
     @Nullable
     @Override
@@ -66,19 +71,19 @@ public class HomeActivity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setHasOptionsMenu(true);
         preferences = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
 
         email = preferences.getString("email", "not found");
 
         list = new ArrayList<Pdf>();
-        rv_home = (RecyclerView) getActivity().findViewById(R.id.rv_home);
+        rv_home = getActivity().findViewById(R.id.rv_home);
         rv_home.setHasFixedSize(true);
         rv_home.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new GetPdf().execute();
 
-        refresh_home = (SwipeRefreshLayout) getActivity().findViewById(R.id.refresh_home);
+        refresh_home = getActivity().findViewById(R.id.refresh_home);
 
         refresh_home.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -102,6 +107,8 @@ public class HomeActivity extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main2, menu);
 
+
+
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
@@ -119,6 +126,7 @@ public class HomeActivity extends Fragment {
                 return false;
             }
         });
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public class GetPdf extends AsyncTask<Void, Void, AllPdf> {
@@ -186,14 +194,62 @@ public class HomeActivity extends Fragment {
             return new CustomViewHolder(view);
         }
 
+        private Filter exfilter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                ArrayList<Pdf> filterlist = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+
+                    filterlist.addAll(dataf);
+                } else {
+                    String filterpattern = constraint.toString().toLowerCase().trim();
+
+                    for (Pdf item : dataf) {
+
+                        if (item.getBook_title().contains(filterpattern)) {
+                            filterlist.add(item);
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filterlist;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                data.clear();
+                data.addAll((ArrayList) results.values);
+                notifyDataSetChanged();
+            }
+        };
+
+
+        @Override
+        public int getItemCount() {
+            if (list != null && list.size() > 0) {
+                return list.size();
+            } else {
+                return 0;
+            }
+            //  return data.size();
+        }
+
+        @Override
+        public Filter getFilter() {
+            return exfilter;
+        }
+
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
 
             if (data.get(position) != null) {
                 final Pdf pdf = data.get(position);
 
-                String path = pdf.getBook_image_url().toString().trim();
-                final String id = pdf.getBook_id().toString().trim();
+                String path = pdf.getBook_image_url().trim();
+                final String id = pdf.getBook_id().trim();
 
 
                 if (path != "") {
@@ -267,54 +323,6 @@ public class HomeActivity extends Fragment {
             }
         }
 
-
-        @Override
-        public int getItemCount() {
-            if (list != null && list.size() > 0) {
-                return list.size();
-            } else {
-                return 0;
-            }
-            //  return data.size();
-        }
-
-        @Override
-        public Filter getFilter() {
-            return exfilter;
-        }
-
-        private Filter exfilter = new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                ArrayList<Pdf> filterlist = new ArrayList<>();
-                if (constraint == null || constraint.length() == 0) {
-
-                    filterlist.addAll(dataf);
-                } else {
-                    String filterpattern = constraint.toString().toLowerCase().trim();
-
-                    for (Pdf item : dataf) {
-
-                        if (item.getBook_title().toString().contains(filterpattern)) {
-                            filterlist.add(item);
-                        }
-                    }
-                }
-                FilterResults results = new FilterResults();
-                results.values = filterlist;
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-
-                data.clear();
-                data.addAll((ArrayList) results.values);
-                notifyDataSetChanged();
-            }
-        };
-
         public class CustomViewHolder extends RecyclerView.ViewHolder {
 
             TextView show_name;
@@ -325,7 +333,7 @@ public class HomeActivity extends Fragment {
             public CustomViewHolder(View itemView) {
 
                 super(itemView);
-                rl = (RelativeLayout) itemView.findViewById(R.id.rl);
+                rl = itemView.findViewById(R.id.rl);
                 show_name = itemView.findViewById(R.id.show_name);
                 show_image = itemView.findViewById(R.id.show_image);
                 btn_add = itemView.findViewById(R.id.btn_add);

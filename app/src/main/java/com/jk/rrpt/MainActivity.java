@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private TextView user_name;
     private TextView user_email;
 
-   private String email;
+   private String email,name;
 
     private ActionBarDrawerToggle toggle;
     SharedPreferences preferences;
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity
 
         displayFragment(R.id.nav_home);
 
-          user_email = (TextView) findViewById(R.id.useremail);
-         user_name = (TextView) findViewById(R.id.username);
+          user_email = findViewById(R.id.useremail);
+         user_name = findViewById(R.id.username);
 
         preferences = getApplicationContext().getSharedPreferences("login_data", Context.MODE_PRIVATE);
         email = preferences.getString("email", "not found");
