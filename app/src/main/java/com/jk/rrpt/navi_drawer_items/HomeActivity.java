@@ -32,6 +32,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.jk.rrpt.API.APICall;
 import com.jk.rrpt.API.APIRes;
 import com.jk.rrpt.MODEL.AllPdf;
@@ -50,7 +55,7 @@ public class HomeActivity extends Fragment {
     private RecyclerView rv_home;
 
     SharedPreferences preferences;
-
+    private AdView mAdView;
     MyAdaptor adaptor;
 
     private String email;
@@ -73,8 +78,20 @@ public class HomeActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
 
-        preferences = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
 
+        //ads banner
+        mAdView = getActivity().findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        //sdk for ads
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        preferences = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
         email = preferences.getString("email", "not found");
 
         list = new ArrayList<Pdf>();

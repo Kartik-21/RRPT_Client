@@ -25,6 +25,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.jk.rrpt.API.APICall;
 import com.jk.rrpt.API.APIRes;
 import com.jk.rrpt.MODEL.AllPdf;
@@ -41,6 +46,7 @@ public class FavouriteActivity extends Fragment {
 
     private ArrayList<Pdf> list;
     private RecyclerView rv_fav;
+    private AdView mAdView;
 
 
     SharedPreferences preferences;
@@ -60,6 +66,19 @@ public class FavouriteActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        //ads banner
+        mAdView = getActivity().findViewById(R.id.adView1);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        //sdk for ads
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+
         preferences = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
 
         email = preferences.getString("email", "not found");
@@ -67,13 +86,13 @@ public class FavouriteActivity extends Fragment {
         //   Toast.makeText(getContext(), email, Toast.LENGTH_LONG).show();
 
         list = new ArrayList<Pdf>();
-        rv_fav = (RecyclerView) getActivity().findViewById(R.id.rv_fav);
+        rv_fav = getActivity().findViewById(R.id.rv_fav);
         rv_fav.setHasFixedSize(true);
         rv_fav.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new UserPdf().execute();
 
-        refresh_fav = (SwipeRefreshLayout) getActivity().findViewById(R.id.refresh_fav);
+        refresh_fav = getActivity().findViewById(R.id.refresh_fav);
 
         refresh_fav.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -168,9 +187,9 @@ public class FavouriteActivity extends Fragment {
 
                 final Pdf pdf = data.get(position);
 
-                String path = pdf.getBook_image_url().toString().trim();
+                String path = pdf.getBook_image_url().trim();
 
-                final String id = pdf.getUser_book_id().toString().trim();
+                final String id = pdf.getUser_book_id().trim();
 
                 if (path != "") {
                     holder.setImage(getContext(), path);
@@ -271,7 +290,7 @@ public class FavouriteActivity extends Fragment {
             public CustomViewHolder(View itemView) {
 
                 super(itemView);
-                rl = (RelativeLayout) itemView.findViewById(R.id.rl);
+                rl = itemView.findViewById(R.id.rl);
                 show_name = itemView.findViewById(R.id.show_name);
                 show_image = itemView.findViewById(R.id.show_image);
                 btn_del = itemView.findViewById(R.id.btn_del);

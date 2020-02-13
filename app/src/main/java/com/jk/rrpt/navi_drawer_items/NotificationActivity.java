@@ -29,6 +29,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.jk.rrpt.API.APICall;
 import com.jk.rrpt.MODEL.AllNoti;
 import com.jk.rrpt.MODEL.Noti;
@@ -37,6 +42,7 @@ import com.jk.rrpt.R;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unchecked")
 public class NotificationActivity extends Fragment {
 
     private static final String TAG = "notification";
@@ -47,6 +53,7 @@ public class NotificationActivity extends Fragment {
     private ArrayList<Noti> list;
     private SwipeRefreshLayout refresh_noti;
     private ScrollView scrol_noti;
+    private AdView mAdView;
 
     public NotificationActivity() {
         setHasOptionsMenu(true);
@@ -62,6 +69,19 @@ public class NotificationActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+
+        //ads banner
+        mAdView = getActivity().findViewById(R.id.adView2);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        //sdk for ads
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
 
         list = new ArrayList<Noti>();
         rv_noti = getActivity().findViewById(R.id.rv_noti);
