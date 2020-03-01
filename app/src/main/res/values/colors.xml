@@ -8,4 +8,6 @@
     <color name="hint_font_color">#A8A1A1</color>
     <color name="text_color">#696565</color>
     <color name="bg_color_layout">#DAD3D3</color>
+    <color name="spin_kit">#0C247C</color>
+
 </resources>

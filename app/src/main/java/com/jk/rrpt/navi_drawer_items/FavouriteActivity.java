@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -53,6 +54,7 @@ public class FavouriteActivity extends Fragment {
 
     private String email;
     private SwipeRefreshLayout refresh_fav;
+    private SpinKitView spinkit;
 
     @Nullable
     @Override
@@ -65,7 +67,7 @@ public class FavouriteActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        spinkit = getActivity().findViewById(R.id.spin_kit);
         //ads banner
         mAdView = getActivity().findViewById(R.id.adView1);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -77,7 +79,6 @@ public class FavouriteActivity extends Fragment {
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
-
 
         preferences = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
 
@@ -113,15 +114,16 @@ public class FavouriteActivity extends Fragment {
 
     public class UserPdf extends AsyncTask<Void, Void, AllPdf> {
 
-        private ProgressDialog dialog;
+        // private ProgressDialog dialog;
 
 
         @Override
         protected void onPreExecute() {
 
-            dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Please Wait...!");
-            dialog.show();
+//            dialog = new ProgressDialog(getActivity());
+//            dialog.setMessage("Please Wait...!");
+//            dialog.show();
+            spinkit.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -139,8 +141,8 @@ public class FavouriteActivity extends Fragment {
 
         @Override
         protected void onPostExecute(AllPdf allPdf) {
-
-            dialog.dismiss();
+            spinkit.setVisibility(View.GONE);
+            // dialog.dismiss();
             if (allPdf != null) {
                 list.clear();
                 list.addAll(allPdf.getData());
@@ -215,13 +217,14 @@ public class FavouriteActivity extends Fragment {
 
                     class DelBook extends AsyncTask<Void, Void, String> {
 
-                        ProgressDialog dialog;
+                        //    ProgressDialog dialog;
 
                         @Override
                         protected void onPreExecute() {
-                            dialog = new ProgressDialog(getActivity());
-                            dialog.setMessage("Please Wait...!");
-                            dialog.show();
+//                            dialog = new ProgressDialog(getActivity());
+//                            dialog.setMessage("Please Wait...!");
+//                            dialog.show();
+                            spinkit.setVisibility(View.VISIBLE);
                             super.onPreExecute();
                         }
 
@@ -242,7 +245,8 @@ public class FavouriteActivity extends Fragment {
                             } else {
                                 Toast.makeText(getActivity(), "Try again..", Toast.LENGTH_SHORT).show();
                             }
-                            dialog.dismiss();
+                            spinkit.setVisibility(View.GONE);
+                            //dialog.dismiss();
                             super.onPostExecute(s);
                         }
 
@@ -277,7 +281,7 @@ public class FavouriteActivity extends Fragment {
             } else {
                 return 0;
             }
-           // return data.size();
+            // return data.size();
         }
 
         public class CustomViewHolder extends RecyclerView.ViewHolder {

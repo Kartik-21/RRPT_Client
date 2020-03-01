@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -60,6 +61,7 @@ public class HomeActivity extends Fragment {
 
     private String email;
     private SwipeRefreshLayout refresh_home;
+    private SpinKitView spinkit;
 
     public HomeActivity() {
         setHasOptionsMenu(true);
@@ -78,6 +80,7 @@ public class HomeActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
 
+        spinkit = getActivity().findViewById(R.id.spin_kit);
 
         //ads banner
         mAdView = getActivity().findViewById(R.id.adView);
@@ -145,13 +148,14 @@ public class HomeActivity extends Fragment {
 
     public class GetPdf extends AsyncTask<Void, Void, AllPdf> {
 
-        private ProgressDialog dialog;
+        // private ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
-            dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Loading..");
-            dialog.show();
+//            dialog = new ProgressDialog(getActivity());
+//            dialog.setMessage("Loading..");
+//            dialog.show();
+            spinkit.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -168,7 +172,8 @@ public class HomeActivity extends Fragment {
         @Override
         protected void onPostExecute(AllPdf allPdf) {
 
-            dialog.dismiss();
+            spinkit.setVisibility(View.GONE);
+            // dialog.dismiss();
             if (allPdf != null) {
                 list.clear();
                 list.addAll(allPdf.getData());
@@ -283,7 +288,7 @@ public class HomeActivity extends Fragment {
                     }
 
                     class AddBook extends AsyncTask<Void, Void, String> {
-                        private ProgressDialog dialog;
+                        // private ProgressDialog dialog;
 
 
                         @Override
@@ -291,9 +296,11 @@ public class HomeActivity extends Fragment {
 
 //                        Toast.makeText(getActivity(), "clicked.." + id +" "+email, Toast.LENGTH_SHORT).show();
 
-                            dialog = new ProgressDialog(getActivity());
-                            dialog.setMessage("Please Wait...!");
-                            dialog.show();
+
+//                            dialog = new ProgressDialog(getActivity());
+//                            dialog.setMessage("Please Wait...!");
+//                            dialog.show();
+                            spinkit.setVisibility(View.VISIBLE);
                             super.onPreExecute();
                         }
 
@@ -314,8 +321,8 @@ public class HomeActivity extends Fragment {
                             } else {
                                 Toast.makeText(getActivity(), "Please try again..!", Toast.LENGTH_SHORT).show();
                             }
-                            dialog.dismiss();
-
+                            // dialog.dismiss();
+                            spinkit.setVisibility(View.GONE);
                             super.onPostExecute(result);
                         }
                     }
@@ -362,7 +369,6 @@ public class HomeActivity extends Fragment {
 
         }
     }
-
 
 }
 

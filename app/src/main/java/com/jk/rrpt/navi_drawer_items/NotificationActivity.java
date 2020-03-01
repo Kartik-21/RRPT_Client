@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -54,6 +55,7 @@ public class NotificationActivity extends Fragment {
     private SwipeRefreshLayout refresh_noti;
     private ScrollView scrol_noti;
     private AdView mAdView;
+    private SpinKitView spinkit;
 
     public NotificationActivity() {
         setHasOptionsMenu(true);
@@ -69,6 +71,8 @@ public class NotificationActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+
+        spinkit= getActivity().findViewById(R.id.spin_kit);
 
         //ads banner
         mAdView = getActivity().findViewById(R.id.adView2);
@@ -129,7 +133,6 @@ public class NotificationActivity extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 adaptor.getFilter().filter(newText);
                 return false;
             }
@@ -139,13 +142,14 @@ public class NotificationActivity extends Fragment {
 
     public class GetNoti extends AsyncTask<Void, Void, AllNoti> {
 
-        ProgressDialog dialog;
+      //  ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
-            dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Loading...");
-            dialog.show();
+//            dialog = new ProgressDialog(getActivity());
+//            dialog.setMessage("Loading...");
+//            dialog.show();
+            spinkit.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -161,7 +165,8 @@ public class NotificationActivity extends Fragment {
         @Override
         protected void onPostExecute(AllNoti allNoti) {
 
-            dialog.dismiss();
+            spinkit.setVisibility(View.GONE);
+          //  dialog.dismiss();
             if (allNoti != null) {
                 list.clear();
                 list.addAll(allNoti.getData());
