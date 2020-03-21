@@ -17,10 +17,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu1, menu);
         return true;
     }
 
@@ -170,6 +166,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
+                preferences.edit().clear().apply();
                 break;
 
         }

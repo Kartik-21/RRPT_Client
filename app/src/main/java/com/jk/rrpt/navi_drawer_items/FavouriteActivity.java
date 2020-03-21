@@ -50,7 +50,7 @@ public class FavouriteActivity extends Fragment {
     private AdView mAdView;
 
 
-    SharedPreferences preferences;
+   private SharedPreferences preferences;
 
     private String email;
     private SwipeRefreshLayout refresh_fav;
@@ -164,7 +164,7 @@ public class FavouriteActivity extends Fragment {
 
     }
 
-    public class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.CustomViewHolder> {
+    private class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.CustomViewHolder> {
 
         private ArrayList<Pdf> data;
 

@@ -1,6 +1,5 @@
 package com.jk.rrpt.navi_drawer_items;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,9 +54,9 @@ public class HomeActivity extends Fragment {
     private ArrayList<Pdf> list;
     private RecyclerView rv_home;
 
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
     private AdView mAdView;
-    MyAdaptor adaptor;
+    private MyAdaptor adaptor;
 
     private String email;
     private SwipeRefreshLayout refresh_home;
@@ -126,7 +125,7 @@ public class HomeActivity extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.main2, menu);
+        inflater.inflate(R.menu.menu2, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -193,7 +192,7 @@ public class HomeActivity extends Fragment {
     }
 
 
-    public class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.CustomViewHolder> implements Filterable {
+    private class MyAdaptor extends RecyclerView.Adapter<MyAdaptor.CustomViewHolder> implements Filterable {
 
         private ArrayList<Pdf> data;
         private ArrayList<Pdf> dataf;
@@ -369,6 +368,5 @@ public class HomeActivity extends Fragment {
 
         }
     }
-
 }
 

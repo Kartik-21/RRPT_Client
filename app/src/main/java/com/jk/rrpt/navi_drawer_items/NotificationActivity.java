@@ -1,6 +1,5 @@
 package com.jk.rrpt.navi_drawer_items;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,16 +10,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,7 +33,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.jk.rrpt.API.APICall;
 import com.jk.rrpt.MODEL.AllNoti;
 import com.jk.rrpt.MODEL.Noti;
-import com.jk.rrpt.MODEL.Pdf;
 import com.jk.rrpt.R;
 
 import java.util.ArrayList;
@@ -48,7 +42,7 @@ public class NotificationActivity extends Fragment {
 
     private static final String TAG = "notification";
 
-    MyAdaptor1 adaptor;
+    private MyAdaptor1 adaptor;
 
     private RecyclerView rv_noti;
     private ArrayList<Noti> list;
@@ -72,7 +66,7 @@ public class NotificationActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
 
-        spinkit= getActivity().findViewById(R.id.spin_kit);
+        spinkit = getActivity().findViewById(R.id.spin_kit);
 
         //ads banner
         mAdView = getActivity().findViewById(R.id.adView2);
@@ -120,7 +114,7 @@ public class NotificationActivity extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.main2, menu);
+        inflater.inflate(R.menu.menu2, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -142,7 +136,7 @@ public class NotificationActivity extends Fragment {
 
     public class GetNoti extends AsyncTask<Void, Void, AllNoti> {
 
-      //  ProgressDialog dialog;
+        //  ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
@@ -166,7 +160,7 @@ public class NotificationActivity extends Fragment {
         protected void onPostExecute(AllNoti allNoti) {
 
             spinkit.setVisibility(View.GONE);
-          //  dialog.dismiss();
+            //  dialog.dismiss();
             if (allNoti != null) {
                 list.clear();
                 list.addAll(allNoti.getData());
@@ -188,7 +182,7 @@ public class NotificationActivity extends Fragment {
     }
 
 
-    public class MyAdaptor1 extends RecyclerView.Adapter<MyAdaptor1.BlogViewHolder> implements Filterable {
+    private class MyAdaptor1 extends RecyclerView.Adapter<MyAdaptor1.BlogViewHolder> implements Filterable {
 
         ArrayList<Noti> list;
         private ArrayList<Noti> dataf;

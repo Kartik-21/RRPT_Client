@@ -16,11 +16,11 @@
                 android:strokeColor="#707070" />
         </group>
         <group
-            android:translateX="175.475"
-            android:translateY="170.022">
+            android:translateX="174.475"
+            android:translateY="171.022">
             <group
                 android:translateX="180"
-                android:translateY="183.22">
+                android:translateY="182.22">
                 <path
                     android:fillColor="#707070"
                     android:pathData="M0 0H50.884V24.103H0V0Z" />
